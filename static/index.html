@@ -143,9 +143,7 @@
 
           downsample_offset += (inputData.length/sampleRatio)|0
 
-          if(downsample_offset > 320) {
-            process_samples()
-          }
+          process_samples()
 
           outputData.fill(0)
         }

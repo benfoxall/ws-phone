@@ -141,16 +141,13 @@
 
           }
 
-          downsample_offset += ~~(inputData.length/sampleRatio)
+          downsample_offset += (inputData.length/sampleRatio)|0
 
           if(downsample_offset > 320) {
             process_samples()
           }
 
-          for (var sample = 0; sample < inputBuffer.length; sample++) {
-            // Silence the output
-            outputData[sample] = 0
-          }
+          outputData.fill(0)
         }
 
         source.connect(processor)

@@ -92,9 +92,9 @@ window.nexmoGraph = ({audioCtx, origin} = {}) => {
   // connect to output to allow graph to be active
   processor.connect(audioCtx.destination)
 
-  const call = (name, token) =>
+  const dial = (name, token) =>
     ws.send(JSON.stringify({ name, token }))
 
 
-  return { audioCtx, In, Out, call }
+  return { audioCtx, In, Out, dial }
 }

@@ -8,19 +8,22 @@
     <script src="nexmoGraph.js"></script>
     <script type="text/javascript">
 
+      // this creates a nexmo websocket thing that can
+      // be incorporated into a web audio graph
       const nexmo = nexmoGraph()
 
       /*
-      The plan:
 
+      // send audio to the call
       source.connectTo(nexmo.In)
 
+      // pipe audio from the call
       nexmo.Out.connectTo(ctx.destination)
 
-      nexmo.call('phil')
+      // Start a phone call
+      nexmo.dial('phil', 'secret_token')
+
       */
-
-
 
     </script>
   </body>

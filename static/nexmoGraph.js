@@ -13,9 +13,13 @@ window.nexmoGraph = ({audioCtx, origin} = {}) => {
   ws.binaryType = 'arraybuffer'
   ws.onclose = () => console.log(`WebSocket ${origin} CLOSED`)
 
+  let active
+
   // play incoming messages to `Out` node
   let time = 0
   ws.onmessage = (event) => {
+    active = true
+
     time = Math.max(audioCtx.currentTime, time)
 
     var input = new Int16Array(event.data)
@@ -58,6 +62,10 @@ window.nexmoGraph = ({audioCtx, origin} = {}) => {
   const sampleRatio = audioCtx.sampleRate / 16000
 
   processor.onaudioprocess = (event) => {
+    if(!active) return
+
+    // if we haven't heard anything in a couple of seconds, don't bother
+    if(audioCtx.currentTime - time > 2) return
 
     const inputBuffer = event.inputBuffer
     const outputBuffer = event.outputBuffer
@@ -84,14 +92,9 @@ window.nexmoGraph = ({audioCtx, origin} = {}) => {
   // connect to output to allow graph to be active
   processor.connect(audioCtx.destination)
 
-  const call = (name) => {
-    const token = 'TOKEN'
+  const call = (name, token) =>
     ws.send(JSON.stringify({ name, token }))
-  }
 
-  return {
-    audioCtx,
-    In, Out,
-    call,
-  }
+
+  return { audioCtx, In, Out, call }
 }

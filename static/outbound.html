@@ -3,27 +3,73 @@
   <head>
     <meta charset="utf-8">
     <title>Oubound test</title>
+    <style media="screen">
+      body { font-family: sans-serif; }
+    </style>
   </head>
   <body>
+
+    <form id="f">
+      <input name="name" placeholder="name" />
+      <input name="token" placeholder="token" />
+      <input type="submit" value="call">
+    </form>
+
     <script src="nexmoGraph.js"></script>
     <script type="text/javascript">
 
-      // this creates a nexmo websocket thing that can
-      // be incorporated into a web audio graph
+      // Create a WebSocket connection to nexmo voice backend
       const nexmo = nexmoGraph()
 
+      // Access interfaces to the connection that may be used
+      // in a WebAudio graph
+      const {In, Out, audioCtx} = nexmo
+
+
+      // Access microphone and connect to nexmo
+      navigator.mediaDevices
+        .getUserMedia({ video: false, audio: true })
+        .then(stream =>
+          audioCtx.createMediaStreamSource(stream).connect(In)
+        )
+
+      // Output the graph to the speakers
+      Out.connect(audioCtx.destination)
+
+
+      // Instruct backend to make outgoing call
+      // nexmo.dial('username', 'secret-token')
+
+
+      // (use the form for that)
+      f.addEventListener('submit', e => {
+        e.preventDefault()
+        const data = new FormData(f)
+        const name = data.get('name')
+        const token = data.get('token')
+
+        nexmo.dial(name, token)
+
+        f.remove()
+      })
+
+
       /*
+        Example: play an mp3 to the phone call
 
-      // send audio to the call
-      source.connectTo(nexmo.In)
-
-      // pipe audio from the call
-      nexmo.Out.connectTo(ctx.destination)
-
-      // Start a phone call
-      nexmo.dial('phil', 'secret_token')
+        fetch('https://benjaminbenben.com/microgl/audio_data.mp3')
+          .then(res => res.arrayBuffer())
+          .then(data => audioCtx.decodeAudioData(data))
+          .then(data => {
+              const source = audioCtx.createBufferSource()
+              source.buffer = data
+              source.connect(In)
+              source.start()
+          })
 
       */
+
+
 
     </script>
   </body>

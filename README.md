@@ -4,7 +4,7 @@ Receive voice calls in your browser.
 
 ![](static/screenshot.png)
 
-_note: this requires [getUserMedia/Stream API](http://caniuse.com/#feat=stream) (ie. Not Safari)_
+_note: this requires [getUserMedia/Stream API](http://caniuse.com/#feat=stream) (soon to be Safari too!)_
 
 ## Development/Deployment
 
